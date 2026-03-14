@@ -7,12 +7,13 @@ export const UserContext = createContext()
 export const AuthProvider = ({ children }) => {
 
   const [todo, setTodo] = useState([])
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
-
+    if(!isLoggedIn) return;
     const fetchTodo = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/api/todo/get",{withCredentials: true})
+        const { data } = await axios.get("http://localhost:3000/api/todo/get", {withCredentials: true})
         console.log(data)
         setTodo(data.todos)
       } catch (error) {
@@ -22,10 +23,10 @@ export const AuthProvider = ({ children }) => {
 
     fetchTodo()
 
-  }, [])
+  }, [isLoggedIn])
 
   return (
-    <UserContext.Provider value={{ todo, setTodo }}>
+    <UserContext.Provider value={{ todo, setTodo, setIsLoggedIn }}>
       {children}
     </UserContext.Provider>
   )

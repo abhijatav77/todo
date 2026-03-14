@@ -11,7 +11,8 @@ export const create = async (req, res) => {
             });
         }   
         const newTodo = await Todo.create({
-            title
+            title,
+            userId: req.user.id
         }); 
 
         return res.status(201).json({
@@ -59,8 +60,7 @@ export const update = async (req, res) => {
 
 export const getAllTodos = async (req, res) => {
     try {
-        const todos = await Todo.find()
-
+        const todos = await Todo.find({userId: req.user.id})
         return res.status(200).json({ todos }); 
     } catch (error) {
         return res.status(500).json({

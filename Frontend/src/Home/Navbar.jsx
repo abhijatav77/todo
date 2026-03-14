@@ -2,16 +2,20 @@ import axios from 'axios'
 import React from 'react'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../Context/UseAuth'
 
 const Navbar = () => {
 
     const navigate = useNavigate()
+    const {setIsLoggedIn, setTodo} = useAuth()
 
     const handleLogout = async () => {
         try {
             const {data} = await axios.get(`http://localhost:3000/api/users/logout`,{withCredentials: true})
             console.log(data)
             toast.success(data.message)
+            setIsLoggedIn(false)
+            setTodo([])
             navigate('/login')
         } catch (error) {
             console.log(error)

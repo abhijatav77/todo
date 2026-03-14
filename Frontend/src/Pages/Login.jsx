@@ -2,10 +2,13 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../Context/UseAuth'
 
 const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
+    const {setIsLoggedIn} = useAuth()
 
     const navigate = useNavigate()
 
@@ -17,6 +20,7 @@ const Login = () => {
             })
             console.log(data)
             toast.success(data.message)
+            setIsLoggedIn(true)
             navigate("/")
         } catch (error) {
             toast.error(error?.response?.data?.message)
