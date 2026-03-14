@@ -1,4 +1,6 @@
-export const createTodo = async (req, res) => {
+import { Todo } from "../module/TodoModule.js";
+
+export const create = async (req, res) => {
     try {
         const { title } = req.body; 
 
@@ -15,7 +17,7 @@ export const createTodo = async (req, res) => {
         return res.status(201).json({
             message: "Todo created successfully",
             success: true,
-            data: newTodo
+            todo: newTodo
         });
 
     } catch (error) {
@@ -25,19 +27,64 @@ export const createTodo = async (req, res) => {
     }   
 };
 
+export const update = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const {title} = req.body;
+        if(!title){
+            return res.status(400).json({
+                success: false,
+                message: "Fields are required"
+            })
+        }
+        const update = await Todo.findOneAndUpdate({_id: id}, {title}, {new: true})
+        if(!update){
+            return res.status(400).json({
+                success: false,
+                message: "Todo not found"
+            })
+        }
+        res.status(200).json({
+            success: true,
+            message: "Todo updated successfully",
+            update
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
+
 export const getAllTodos = async (req, res) => {
     try {
         const todos = await Todo.find()
 
-        return res.status(200).json({
-            message: "Todos retrieved successfully",
-            success: true,
-            data: todos
-        }); 
+        return res.status(200).json({ todos }); 
     } catch (error) {
         return res.status(500).json({
             message: error.message || "Internal server error",
             success: false
         });
+    }
+}
+
+export const deleteTodo = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const todo = await Todo.findByIdAndDelete(id)
+        if(!todo){
+            return res.status(400).json({
+                success: false,
+                message: "Todo not found"
+            })
+        }
+        res.status(200).json({
+            success: true,
+            message: "Todo deleted successfully"
+        })
+    } catch (error) {
+        console.log(error.message)
     }
 }

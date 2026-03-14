@@ -58,7 +58,7 @@ export const login = async (req, res) =>{
                 success : false
             })
         }
-        const user = await User.findOne({ email : email})
+        const user = await User.findOne({email})
 
         if(!user){
             return res.status(400).json({
@@ -101,7 +101,7 @@ export const login = async (req, res) =>{
 
 export const logout = async (req, res) => {
     try {
-        res.clearCookie("token", {
+        res.clearCookie("token", null,{
             httpOnly : true,
             secure : process.env.NODE_ENV === "production",
             sameSite : "strict"

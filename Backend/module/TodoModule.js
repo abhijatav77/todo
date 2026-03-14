@@ -7,5 +7,4 @@ const todoSchema = new mongoose.Schema({
     }
 }, { timestamps : true });
 
-const Todo = mongoose.model("Todo", todoSchema);
-export default Todo;
+export const Todo = mongoose.model("Todo", todoSchema);
